@@ -12,9 +12,19 @@ bool IsValidNumber(const string &number)
 
 	for (size_t i = 0; i < number.size(); i++)
 	{
-		if (number[i] <= '0' || number[i] > '9')
+		size_t firstDelimiter = 0;		
+		if (i == 0 && number[i] == '0')
+		{
+			continue;
+		}
+		if (i != 0 && (number[i] == ',') && firstDelimiter == 0)
+		{
+			firstDelimiter++;
+		}
+		else if (number[i] <= '0' || number[i] > '9')
 		{			
 			result = false;
+			break;
 		}
 	}
 	return result;
@@ -47,7 +57,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	unsigned int a, b, c;
+	double a, b, c;
 
 	if (!ValidInput(argv))
 	{
@@ -56,17 +66,18 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	
-	a = stoi(argv[1]);
-	b = stoi(argv[2]);
-	c = stoi(argv[3]);
+	a = stod(argv[1]);
+	b = stod(argv[2]);
+	c = stod(argv[3]);
 
 	// Отрезки образуют треугольник если самый больший меньше суммы двух других	
-	unsigned int maxLine = max(a, b);
+	double maxLine = max(a, b);
 	maxLine = max(maxLine, c);
 
-	unsigned const int twoLinesSum = a + b + c - maxLine;
+	const double twoLinesSum = a + b + c - maxLine;
 
-	if (maxLine >= twoLinesSum)
+	if (maxLine > twoLinesSum
+		|| (abs(maxLine - twoLinesSum) <= DBL_EPSILON))
 	{
 		cout << "Фигура не является треугольником" << endl;
 		return 1;
